@@ -1,6 +1,6 @@
 #include "Player.h"
-#include "../engine/collision/CollisionSystem.h"
-#include "../engine/scene/SceneSerialiser.h"
+#include <collision/CollisionSystem.h>
+#include <scene/SceneSerialiser.h>
 
 // Static member initialisation
 const std::string Player::ENTITY_NAME("Player");
@@ -30,29 +30,15 @@ void Player::OnUpdate()
 
 void Player::OnDraw()
 {
-    // Set the model's texture to this entity's texture
-    ModelData::SetTexture(ResourceManager::Get<Model>(modelData.GetModelPath()),
-                          ResourceManager::Get<Texture2D>(modelData.GetTexturePath()));
+    const Model& model = ResourceManager::Get<Model>(modelData.GetModelPath());
+    const Texture& texture = ResourceManager::Get<Texture>(modelData.GetTexturePath());
 
-    // Draw the model
-    DrawModelEx(
-            ResourceManager::Get<Model>(modelData.GetModelPath()),
-            position,
-            raylib::Vector3(0, 1, 0),
-            rotation,
-            raylib::Vector3::One(),
-            WHITE
-    );
-
-    // Draw the model wireframe
-    DrawModelWiresEx(
-            ResourceManager::Get<Model>(modelData.GetModelPath()),
-            position,
-            raylib::Vector3(0, 1, 0),
-            rotation,
-            raylib::Vector3::One(),
-            PINK
-    );
+    // Set the model's texture to this entity's texture and draw it
+    ModelData::SetTexture(model, texture);
+    DrawModelEx(model,position,
+                raylib::Vector3(0, 1, 0), rotation, raylib::Vector3::One(), WHITE);
+    DrawModelWiresEx(model,position,
+                     raylib::Vector3(0, 1, 0), rotation, raylib::Vector3::One(), PINK);
 }
 
 BoundingBox Player::GetBoundingBox() const

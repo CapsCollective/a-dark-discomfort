@@ -1,36 +1,21 @@
 #include "Geometry.h"
-#include "../engine/utils/StringHelpers.h"
-#include "../engine/scene/SceneSerialiser.h"
+#include <utils/StringHelpers.h>
+#include <scene/SceneSerialiser.h>
 
 // Static member initialisation
 const std::string Geometry::ENTITY_NAME("Geometry");
 
 void Geometry::OnDraw()
 {
+    const Model& model = ResourceManager::Get<Model>(modelData.GetModelPath());
+    const Texture& texture = ResourceManager::Get<Texture>(modelData.GetTexturePath());
+
     // Set the model's texture to this entity's texture
-    ModelData::SetTexture(
-            ResourceManager::Get<Model>(modelData.GetModelPath()),
-            ResourceManager::Get<Texture2D>(modelData.GetTexturePath()));
-
-    // Draw the model
-    DrawModelEx(
-            ResourceManager::Get<Model>(modelData.GetModelPath()),
-            position,
-            raylib::Vector3(0, 1, 0),
-            rotation,
-            dimensions,
-            WHITE
-    );
-
-    // Draw the model wireframe
-    DrawModelWiresEx(
-            ResourceManager::Get<Model>(modelData.GetModelPath()),
-            position,
-            raylib::Vector3(0, 1, 0),
-            rotation,
-            dimensions,
-            PINK
-    );
+    ModelData::SetTexture(model, texture);
+    DrawModelEx(model,position,
+                raylib::Vector3(0, 1, 0), rotation,dimensions,WHITE);
+    DrawModelWiresEx(model,position,
+                     raylib::Vector3(0, 1, 0), rotation,dimensions, PINK);
 }
 
 BoundingBox Geometry::GetBoundingBox() const
